@@ -36,7 +36,7 @@ import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener, GoogleMap.OnMapClickListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -85,6 +85,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        mMap.setOnMapClickListener(this);
         Log.d("test", "onMapready");
     }
 
@@ -230,5 +231,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         myLocation = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.addMarker(new MarkerOptions().position(myLocation).title("My location"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        if (latLng == null) {
+            return;
+        }
+        mMap.clear();
+        mMap.addMarker(new MarkerOptions().position(latLng).title("My location"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
     }
 }
